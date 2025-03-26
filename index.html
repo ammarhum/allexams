@@ -550,43 +550,20 @@
             setTimeout(function() {
                 console.log("EMERGENCY TAB FIX RUNNING");
                 
-                // Make sure all tab containers exist
-                const containers = {
-                    'subjects': document.getElementById('subjects-container'),
-                    'chronological': document.getElementById('chronological-container'),
-                    'calendar': document.getElementById('calendar-container')
-                };
-                
-                // Check which ones are missing and create them
-                for (const [name, container] of Object.entries(containers)) {
-                    if (!container) {
-                        console.log("Creating missing container:", name);
-                        const newContainer = document.createElement('div');
-                        newContainer.id = name + '-container';
-                        newContainer.className = name === 'calendar' ? 'calendar-container' : 'exam-table-container';
-                        newContainer.style.display = 'none';
-                        document.querySelector('.container').appendChild(newContainer);
-                    }
-                }
-                
                 // Find the active button and switch to that tab
                 const activeBtn = document.querySelector('.view-btn.active');
                 if (activeBtn) {
-                    const activeTabName = activeBtn.getAttribute('data-view');
-                    console.log("Switching to active tab:", activeTabName);
-                    
-                    // Trigger a click on the active button to show the correct tab
+                    console.log("Switching to active tab:", activeBtn.dataset.view);
                     activeBtn.click();
                 } else {
-                    // No active button, default to subjects
                     console.log("No active button found, defaulting to subjects");
-                    const firstButton = document.querySelector('.view-btn[data-view="subjects"]');
-                    if (firstButton) {
-                        firstButton.classList.add('active');
-                        firstButton.click();
+                    const subjectsBtn = document.querySelector('.view-btn[data-view="subjects"]');
+                    if (subjectsBtn) {
+                        subjectsBtn.classList.add('active');
+                        subjectsBtn.click();
                     }
                 }
-            }, 1000); // Wait a full second to make sure everything is loaded
+            }, 1000);
         };
 
         // Initialize global variables first to prevent reference errors
@@ -1827,12 +1804,11 @@
             // Initialize the active tab based on the active class
             const activeBtn = document.querySelector('.view-btn.active');
             if (activeBtn) {
-                const activeTab = activeBtn.getAttribute('data-view');
-                console.log('Setting initial active tab:', activeTab);
+                console.log('Setting initial active tab:', activeBtn.dataset.view);
                 
                 // Use a timeout to ensure DOM is ready
                 setTimeout(function() {
-                    switchTab(activeTab);
+                    activeBtn.click();
                 }, 200);
             }
         }
