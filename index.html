@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <title>Exam Timetable</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,447 +35,6 @@
 
     <!-- External CSS -->
     <link rel="stylesheet" href="./styles.css">
-    <style>
-        .splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-        
-        .splash-screen.hide {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .splash-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-        }
-        
-        .splash-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .splash-subtitle {
-            font-size: 16px;
-            color: #777;
-        }
-        
-        /* Container fixes for mobile */
-        @media screen and (max-width: 767px) {
-            .container {
-                width: 100%;
-                max-width: 100%;
-                padding: 10px;
-                margin: 0;
-                box-sizing: border-box;
-                overflow-x: hidden;
-            }
-            
-            .header h1 {
-                text-align: center;
-                margin: 10px 0;
-            }
-            
-            .exam-table-container {
-                width: 100%;
-                padding: 0;
-                margin: 0;
-            }
-            
-            /* Table specific fixes */
-            .table-container {
-                width: 100%;
-                margin: 0 0 20px 0;
-                border-radius: 8px;
-                overflow: hidden;
-                padding: 0;
-            }
-            
-            table {
-                width: 100%;
-                table-layout: fixed;
-                border-collapse: collapse;
-            }
-        }
-        
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            overflow: auto;
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            width: 80%;
-            max-width: 500px;
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close-modal:hover {
-            color: #333;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        
-        .form-group small {
-            display: block;
-            color: #777;
-            margin-top: 5px;
-            font-size: 12px;
-        }
-        
-        .form-actions {
-            text-align: right;
-        }
-        
-        .submit-btn {
-            background-color: var(--primary-color, #3498db);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .submit-btn:hover {
-            background-color: #2980b9;
-        }
-        
-        .remove-btn {
-            background-color: #e74c3c;
-        }
-        
-        .remove-btn:hover {
-            background-color: #c0392b;
-        }
-        
-        .add-icon {
-            font-weight: bold;
-            font-size: 18px;
-            margin-right: 5px;
-        }
-        
-        .remove-icon {
-            font-weight: bold;
-            font-size: 18px;
-            margin-right: 5px;
-        }
-        
-        /* Mobile specific fixes */
-        @media (max-width: 480px) {
-            .view-options {
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            
-            .view-btn {
-                padding: 10px;
-                margin: 5px;
-                min-width: 90px;
-            }
-            
-            .subject-table, .chronological-table {
-                display: block;
-                width: 100% !important;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                table-layout: fixed !important;
-                font-size: 14px;
-                border-collapse: collapse;
-                min-width: 100% !important;
-                margin: 0 !important;
-            }
-            
-            /* Fix for "By Subject" tab on iPhone */
-            .table-container {
-                margin-bottom: 20px !important;
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                background-color: #fff;
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 0 20px 0 !important;
-                box-sizing: border-box;
-            }
-            
-            .subject-table caption {
-                font-weight: bold;
-                padding: 12px 8px;
-                background-color: var(--primary-color, #3498db);
-                color: white;
-                font-size: 16px;
-                text-align: center;
-                width: 100%;
-            }
-            
-            .subject-table th {
-                white-space: nowrap;
-                padding: 10px 8px;
-                font-size: 14px;
-                text-align: left;
-                background-color: #f5f5f5;
-                border-bottom: 1px solid #ddd;
-            }
-            
-            .subject-table td {
-                padding: 10px 8px;
-                vertical-align: middle;
-                border-bottom: 1px solid #eee;
-            }
-            
-            /* Force column widths */
-            .exam-name-header, .exam-name {
-                width: 45% !important;
-                max-width: 45% !important;
-            }
-            
-            .exam-date-header, .exam-date {
-                width: 30% !important;
-                max-width: 30% !important;
-                white-space: nowrap;
-            }
-            
-            .days-left-header, .days-left {
-                width: 25% !important;
-                max-width: 25% !important;
-                text-align: center;
-            }
-            
-            .days-left-value {
-                min-width: 60px;
-                display: inline-block;
-                text-align: center;
-                border-radius: 4px;
-                padding: 4px 2px;
-                font-weight: bold;
-            }
-            
-            /* Fixed stronger background colors for days left indicators */
-            .days-urgent {
-                background-color: rgba(255, 87, 87, 0.7);
-                color: white;
-            }
-            
-            .days-soon {
-                background-color: rgba(255, 193, 7, 0.7);
-            }
-            
-            .days-upcoming {
-                background-color: rgba(76, 175, 80, 0.7);
-                color: white;
-            }
-            
-            .days-distant {
-                background-color: rgba(33, 150, 243, 0.7);
-                color: white;
-            }
-            
-            /* Container fixes for small screens */
-            .container {
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 10px !important;
-                margin: 0 !important;
-                box-sizing: border-box;
-                overflow-x: hidden;
-            }
-            
-            .exam-table-container {
-                width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            
-            /* Improve row display */
-            .subject-table tr, .chronological-table tr {
-                width: 100% !important;
-                display: table-row !important;
-            }
-            
-            /* Fix for iOS Safari - most important fixes */
-            @supports (-webkit-touch-callout: none) {
-                /* Subject table specific fixes for iOS */
-                #subjects-container {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    display: block !important;
-                }
-                
-                /* Table container fixes for iOS */
-                .table-container {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    min-width: 100% !important;
-                    margin: 0 0 20px 0 !important;
-                    padding: 0 !important;
-                    border-radius: 8px !important;
-                    overflow: hidden !important;
-                    box-sizing: border-box !important;
-                    display: block !important;
-                }
-                
-                /* Table fixes for iOS */
-                .subject-table, .chronological-table {
-                    width: 100% !important;
-                    min-width: 100% !important;
-                    max-width: 100% !important;
-                    table-layout: fixed !important;
-                    border-collapse: collapse !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    display: table !important;
-                    border-spacing: 0 !important;
-                }
-                
-                /* Row fixes for iOS */
-                .subject-table tr, .chronological-table tr {
-                    display: table-row !important;
-                    width: 100% !important;
-                }
-                
-                /* Header and cell fixes for iOS */
-                .subject-table th, .subject-table td,
-                .chronological-table th, .chronological-table td {
-                    display: table-cell !important;
-                    box-sizing: border-box !important;
-                    overflow: hidden !important;
-                    text-overflow: ellipsis !important;
-                }
-                
-                /* Header row fixes for iOS */
-                .subject-table thead, .chronological-table thead {
-                    display: table-header-group !important;
-                }
-                
-                /* Body fixes for iOS */
-                .subject-table tbody, .chronological-table tbody {
-                    display: table-row-group !important;
-                }
-                
-                /* Caption fixes for iOS */
-                .subject-table caption {
-                    display: table-caption !important;
-                    width: 100% !important;
-                    box-sizing: border-box !important;
-                }
-                
-                /* Force column sizes with !important on iOS */
-                .exam-name-header, .exam-name {
-                    width: 45% !important;
-                    min-width: 45% !important;
-                    max-width: 45% !important;
-                }
-                
-                .exam-date-header, .exam-date {
-                    width: 30% !important;
-                    min-width: 30% !important;
-                    max-width: 30% !important;
-                    white-space: nowrap !important;
-                }
-                
-                .days-left-header, .days-left {
-                    width: 25% !important;
-                    min-width: 25% !important;
-                    max-width: 25% !important;
-                    text-align: center !important;
-                }
-                
-                /* Calendar view fixes for iOS */
-                .calendar-container {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    overflow-x: hidden !important;
-                }
-                
-                .calendar-grid {
-                    display: grid !important;
-                    width: 100% !important;
-                    grid-template-columns: repeat(7, 1fr) !important;
-                    gap: 5px !important;
-                }
-                
-                .calendar-day-header, .calendar-day {
-                    width: 100% !important;
-                    box-sizing: border-box !important;
-                }
-                
-                /* Prevent text size adjustment */
-                html, body {
-                    width: 100% !important;
-                    overflow-x: hidden !important;
-                    position: relative !important;
-                    -webkit-text-size-adjust: 100% !important;
-                }
-                
-                /* Fix display of container elements */
-                #exam-view, .exam-table-container, #subjects-container, #chronological-container, #calendar-container {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    overflow-x: hidden !important;
-                    box-sizing: border-box !important;
-                }
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- iOS Install Banner -->
@@ -517,22 +76,19 @@
             <!-- Subject tables will be generated here -->
         </div>
 
-        <div class="exam-table-container" id="chronological-container" style="display: none;">
-            <!-- Chronological tables will be generated here -->
-        </div>
-
-        <div class="calendar-container" id="calendar-container" style="display: none;">
-            <!-- Calendar will be generated here -->
-        </div>
-
-        <!-- Controls section -->
+        <!-- Controls section without reset button -->
         <div class="controls">
-            <!-- Buttons removed as requested -->
+            <button class="action-btn" id="refresh-dates">
+                <span class="refresh-icon">↻</span> Refresh Days
+            </button>
         </div>
     </div>
     
-    <!-- Floating action buttons -->
+    <!-- Remove floating export button and keep only refresh and scroll buttons -->
     <div class="floating-action-buttons">
+        <button class="fab" id="floating-refresh" title="Refresh Days Remaining">
+            <span class="refresh-icon">↻</span>
+        </button>
         <button class="fab" id="floating-scroll-top" title="Back to Top">
             <span>⬆</span>
         </button>
@@ -545,27 +101,6 @@
     </footer>
 
     <script>
-        // Emergency helper to fix tabs on mobile devices
-        window.onload = function() {
-            setTimeout(function() {
-                console.log("EMERGENCY TAB FIX RUNNING");
-                
-                // Find the active button and switch to that tab
-                const activeBtn = document.querySelector('.view-btn.active');
-                if (activeBtn) {
-                    console.log("Switching to active tab:", activeBtn.dataset.view);
-                    activeBtn.click();
-                } else {
-                    console.log("No active button found, defaulting to subjects");
-                    const subjectsBtn = document.querySelector('.view-btn[data-view="subjects"]');
-                    if (subjectsBtn) {
-                        subjectsBtn.classList.add('active');
-                        subjectsBtn.click();
-                    }
-                }
-            }, 1000);
-        };
-
         // Initialize global variables first to prevent reference errors
         let exams = {};
         
@@ -597,24 +132,32 @@
             "Computer Science": [
                 { name: "P1 Theory", date: "May 12th" },
                 { name: "P2 Practical", date: "May 21st" }
+            ],
+            "Biology": [
+                { name: "P4 Theory", date: "May 6th" },
+                { name: "P6 Practical", date: "May 13th" },
+                { name: "P2 Multi-Choice", date: "June 11th" }
+            ],
+            "German": [
+                { name: "Reading, Writing & Listening", date: "May 8th" }
             ]
         };
         
-        // Load the saved exams or use default
+        // Load the exams - always use the default exams data
         function loadExams() {
             return defaultExams;
         }
         
-        // Function to save exams to localStorage
+        // Function to save exams - no-op since we don't want to save changes
         function saveExams(examsData) {
             // No-op - intentionally not saving to localStorage
             console.log('Exams data changes not saved (fixed data mode)');
         }
 
-        // Initialize exams
-        exams = defaultExams;
-
         document.addEventListener('DOMContentLoaded', function() {
+            // Always initialize exams from defaultExams
+            exams = defaultExams;
+            
             // Initialize only once with a flag
             if (!window.appInitialized) {
                 window.appInitialized = true;
@@ -798,96 +341,30 @@
                 
                 container.innerHTML = '';
                 
-                // Detect iOS for special handling
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                
-                // Force container styles for mobile and iOS
-                if (window.innerWidth <= 767 || isIOS) {
-                    container.style.width = '100%';
-                    container.style.padding = '0';
-                    container.style.margin = '0';
-                    container.style.boxSizing = 'border-box';
-                }
-                
                 Object.entries(exams).forEach(([subject, examList]) => {
                     const tableContainer = document.createElement('div');
                     tableContainer.className = 'table-container';
                     
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        tableContainer.style.width = '100%';
-                        tableContainer.style.maxWidth = '100%';
-                        tableContainer.style.boxSizing = 'border-box';
-                        tableContainer.style.margin = '0 0 20px 0';
-                        tableContainer.style.padding = '0';
-                        tableContainer.style.overflow = 'hidden';
-                    }
-                    
                     const table = document.createElement('table');
                     table.className = 'subject-table';
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        table.style.width = '100%';
-                        table.style.maxWidth = '100%';
-                        table.style.tableLayout = 'fixed';
-                        table.style.borderCollapse = 'collapse';
-                    }
                     
                     // Create table caption (subject name)
                     const caption = document.createElement('caption');
                     caption.textContent = subject;
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        caption.style.width = '100%';
-                        caption.style.boxSizing = 'border-box';
-                    }
-                    
                     table.appendChild(caption);
                     
                     // Create table headers
                     const thead = document.createElement('thead');
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        thead.style.width = '100%';
-                    }
-                    
                     const headerRow = document.createElement('tr');
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        headerRow.style.width = '100%';
-                    }
                     
                     const nameHeader = document.createElement('th');
                     nameHeader.textContent = 'Exam';
-                    nameHeader.className = 'exam-name-header';
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        nameHeader.style.width = '45%';
-                    }
                     
                     const dateHeader = document.createElement('th');
                     dateHeader.textContent = 'Date';
-                    dateHeader.className = 'exam-date-header';
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        dateHeader.style.width = '30%';
-                    }
                     
                     const daysLeftHeader = document.createElement('th');
                     daysLeftHeader.textContent = 'Days Left';
-                    daysLeftHeader.className = 'days-left-header';
-                    
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        daysLeftHeader.style.width = '25%';
-                        daysLeftHeader.style.textAlign = 'center';
-                    }
                     
                     headerRow.appendChild(nameHeader);
                     headerRow.appendChild(dateHeader);
@@ -898,54 +375,23 @@
                     // Create table body
                     const tbody = document.createElement('tbody');
                     
-                    // Force styles for mobile and iOS
-                    if (window.innerWidth <= 767 || isIOS) {
-                        tbody.style.width = '100%';
-                    }
-                    
                     examList.forEach((exam, index) => {
                         const row = document.createElement('tr');
                         row.dataset.index = index;
                         row.dataset.subject = subject;
                         row.dataset.examDate = exam.date;
                         
-                        // Force styles for mobile and iOS
-                        if (window.innerWidth <= 767 || isIOS) {
-                            row.style.width = '100%';
-                            row.style.display = 'table-row';
-                        }
-                        
                         const nameCell = document.createElement('td');
                         nameCell.className = 'exam-name';
                         nameCell.textContent = exam.name;
-                        
-                        // Force styles for mobile and iOS
-                        if (window.innerWidth <= 767 || isIOS) {
-                            nameCell.style.width = '45%';
-                            nameCell.style.maxWidth = '45%';
-                        }
                         
                         const dateCell = document.createElement('td');
                         dateCell.className = 'exam-date';
                         dateCell.textContent = exam.date;
                         
-                        // Force styles for mobile and iOS
-                        if (window.innerWidth <= 767 || isIOS) {
-                            dateCell.style.width = '30%';
-                            dateCell.style.maxWidth = '30%';
-                            dateCell.style.whiteSpace = 'nowrap';
-                        }
-                        
                         const daysLeftCell = document.createElement('td');
                         daysLeftCell.className = 'days-left';
                         daysLeftCell.dataset.examDate = exam.date;
-                        
-                        // Force styles for mobile and iOS
-                        if (window.innerWidth <= 767 || isIOS) {
-                            daysLeftCell.style.width = '25%';
-                            daysLeftCell.style.maxWidth = '25%';
-                            daysLeftCell.style.textAlign = 'center';
-                        }
                         
                         // Calculate days left
                         const daysLeft = calculateDaysLeft(exam.date);
@@ -957,14 +403,6 @@
                         
                         const daysLeftSpan = document.createElement('span');
                         daysLeftSpan.className = 'days-left-value';
-                        
-                        // Force styles for mobile and iOS
-                        if (window.innerWidth <= 767 || isIOS) {
-                            daysLeftSpan.style.width = 'auto';
-                            daysLeftSpan.style.display = 'inline-block';
-                            daysLeftSpan.style.textAlign = 'center';
-                        }
-                        
                         updateDaysLeftDisplay(daysLeftSpan, daysLeft);
                         
                         daysLeftCell.appendChild(daysLeftSpan);
@@ -979,281 +417,8 @@
                     tableContainer.appendChild(table);
                     container.appendChild(tableContainer);
                 });
-                
-                // Optimize table layout for mobile after rendering
-                setTimeout(optimizeTablesForMobile, 0);
             } catch (error) {
                 console.error('Error rendering subjects:', error);
-            }
-        }
-        
-        // Function to optimize tables for mobile display
-        function optimizeTablesForMobile() {
-            // Detect iOS for special handling
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
-            // Apply mobile optimizations when on a small screen or iOS device
-            if (window.innerWidth <= 767 || isIOS) {
-                // Get all subject tables
-                const tables = document.querySelectorAll('.subject-table');
-                
-                // Force full width on all tables
-                tables.forEach(table => {
-                    // Set explicit styles for full width
-                    table.style.width = '100%';
-                    table.style.maxWidth = '100%';
-                    table.style.tableLayout = 'fixed';
-                    table.style.borderCollapse = 'collapse';
-                    
-                    if (isIOS) {
-                        // Force display mode for iOS
-                        table.style.display = 'table';
-                        table.style.borderSpacing = '0';
-                        table.style.margin = '0';
-                        table.style.border = 'none';
-                    }
-                    
-                    // Set explicit widths for headers and cells
-                    const nameHeader = table.querySelector('.exam-name-header');
-                    const dateHeader = table.querySelector('.exam-date-header');
-                    const daysHeader = table.querySelector('.days-left-header');
-                    
-                    if (nameHeader && dateHeader && daysHeader) {
-                        nameHeader.style.width = '45%';
-                        dateHeader.style.width = '30%';
-                        daysHeader.style.width = '25%';
-                        
-                        // Apply the same widths to all cells in the columns
-                        const nameCells = table.querySelectorAll('.exam-name');
-                        const dateCells = table.querySelectorAll('.exam-date');
-                        const daysCells = table.querySelectorAll('.days-left');
-                        
-                        nameCells.forEach(cell => { 
-                            cell.style.width = '45%';
-                            cell.style.maxWidth = '45%';
-                        });
-                        
-                        dateCells.forEach(cell => {
-                            cell.style.width = '30%';
-                            cell.style.maxWidth = '30%';
-                        });
-                        
-                        daysCells.forEach(cell => { 
-                            cell.style.width = '25%';
-                            cell.style.maxWidth = '25%';
-                            cell.style.textAlign = 'center';
-                        });
-                    }
-                    
-                    // Force caption to full width
-                    const caption = table.querySelector('caption');
-                    if (caption) {
-                        caption.style.width = '100%';
-                        caption.style.boxSizing = 'border-box';
-                    }
-                    
-                    // Force each row to take full width
-                    const rows = table.querySelectorAll('tr');
-                    rows.forEach(row => {
-                        row.style.width = '100%';
-                        row.style.display = 'table-row';
-                        
-                        if (isIOS) {
-                            // Force cells to take their proper width on iOS
-                            const cells = row.querySelectorAll('td, th');
-                            cells.forEach(cell => {
-                                cell.style.boxSizing = 'border-box';
-                                cell.style.overflow = 'hidden';
-                            });
-                        }
-                    });
-                    
-                    // Make sure the container is sized correctly
-                    const container = table.closest('.table-container');
-                    if (container) {
-                        container.style.width = '100%';
-                        container.style.maxWidth = '100%';
-                        container.style.margin = '0 0 20px 0';
-                        container.style.padding = '0';
-                        container.style.boxSizing = 'border-box';
-                        container.style.overflow = 'hidden';
-                        
-                        if (isIOS) {
-                            // Ensure proper display on iOS
-                            container.style.display = 'block';
-                            container.style.minWidth = '100%';
-                        }
-                    }
-                });
-                
-                // Apply special styles for the container
-                const mainContainer = document.querySelector('.container');
-                if (mainContainer) {
-                    mainContainer.style.padding = '10px';
-                    mainContainer.style.boxSizing = 'border-box';
-                    mainContainer.style.width = '100%';
-                    mainContainer.style.maxWidth = '100%';
-                    mainContainer.style.overflow = 'hidden';
-                }
-                
-                // Apply to exam table containers
-                const tableContainers = document.querySelectorAll('.exam-table-container');
-                tableContainers.forEach(container => {
-                    container.style.width = '100%';
-                    container.style.padding = '0';
-                    container.style.margin = '0';
-                    container.style.overflow = 'hidden';
-                    
-                    if (isIOS) {
-                        // Ensure proper display on iOS
-                        container.style.display = 'block';
-                        container.style.minWidth = '100%';
-                    }
-                });
-                
-                // Also apply the same to chronological table if visible
-                const chronoTable = document.querySelector('.chronological-table');
-                if (chronoTable) {
-                    chronoTable.style.width = '100%';
-                    chronoTable.style.maxWidth = '100%';
-                    chronoTable.style.tableLayout = 'fixed';
-                    
-                    // Special handling for iOS devices - extra fixes for chronological table
-                    if (isIOS) {
-                        // Force display mode
-                        chronoTable.style.display = 'table';
-                        chronoTable.style.borderCollapse = 'collapse';
-                        
-                        // Force proper sizing of subject column in chronological view
-                        const subjectHeader = chronoTable.querySelector('th:first-child');
-                        const nameHeader = chronoTable.querySelector('th:nth-child(2)');
-                        const dateHeader = chronoTable.querySelector('th:nth-child(3)');
-                        const daysHeader = chronoTable.querySelector('th:nth-child(4)');
-                        
-                        if (subjectHeader && nameHeader && dateHeader && daysHeader) {
-                            subjectHeader.style.width = '25%';
-                            nameHeader.style.width = '25%';
-                            dateHeader.style.width = '25%';
-                            daysHeader.style.width = '25%';
-                            
-                            // Apply same widths to cells
-                            const rows = chronoTable.querySelectorAll('tbody tr');
-                            rows.forEach(row => {
-                                if (row.cells.length >= 4) {
-                                    row.cells[0].style.width = '25%';
-                                    row.cells[1].style.width = '25%';
-                                    row.cells[2].style.width = '25%';
-                                    row.cells[3].style.width = '25%';
-                                }
-                            });
-                        }
-                    }
-                    
-                    // Similar treatment for chronological table rows
-                    const rows = chronoTable.querySelectorAll('tr');
-                    rows.forEach(row => {
-                        row.style.width = '100%';
-                        row.style.display = 'table-row';
-                    });
-                }
-                
-                // Fix calendar view for iOS
-                if (isIOS) {
-                    const calendarContainer = document.getElementById('calendar-container');
-                    if (calendarContainer) {
-                        calendarContainer.style.width = '100%';
-                        calendarContainer.style.maxWidth = '100%';
-                        calendarContainer.style.padding = '0';
-                        calendarContainer.style.boxSizing = 'border-box';
-                        
-                        // Force calendar grid to take full width
-                        const calendarGrid = calendarContainer.querySelector('.calendar-grid');
-                        if (calendarGrid) {
-                            calendarGrid.style.width = '100%';
-                            calendarGrid.style.display = 'grid';
-                            calendarGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
-                            calendarGrid.style.gap = '5px';
-                            
-                            // Ensure day headers span full width
-                            const dayHeaders = calendarGrid.querySelectorAll('.calendar-day-header');
-                            dayHeaders.forEach(header => {
-                                header.style.textAlign = 'center';
-                                header.style.padding = '5px 2px';
-                                header.style.fontSize = '12px';
-                                header.style.overflow = 'hidden';
-                            });
-                            
-                            // Ensure day cells fit properly
-                            const dayCells = calendarGrid.querySelectorAll('.calendar-day');
-                            dayCells.forEach(cell => {
-                                cell.style.minHeight = '50px';
-                                cell.style.padding = '2px';
-                                cell.style.overflow = 'hidden';
-                                cell.style.boxSizing = 'border-box';
-                            });
-                        }
-                    }
-                }
-                
-                // Additional fix: force redraw by toggling display
-                if (isIOS) {
-                    const subjects = document.getElementById('subjects-container');
-                    if (subjects && subjects.style.display !== 'none') {
-                        subjects.style.display = 'none';
-                        setTimeout(() => {
-                            subjects.style.display = 'block';
-                        }, 0);
-                    }
-                    
-                    // Force redraw of calendar view if it's visible
-                    const calendarView = document.getElementById('calendar-container');
-                    if (calendarView && calendarView.style.display !== 'none') {
-                        calendarView.style.display = 'none';
-                        setTimeout(() => {
-                            calendarView.style.display = 'block';
-                        }, 0);
-                    }
-                }
-            }
-        }
-        
-        // Check window resize for responsive adjustments
-        window.addEventListener('resize', function() {
-            // Detect iOS for special handling
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
-            // Optimize for mobile or iOS
-            if (window.innerWidth <= 767 || isIOS) {
-                optimizeTablesForMobile();
-            }
-        });
-        
-        // Function to update all views for mobile
-        function updateAllViewsForMobile() {
-            // Apply optimization for tables
-            optimizeTablesForMobile();
-            
-            // Apply additional mobile-specific adjustments
-            var isMobile = window.innerWidth <= 480;
-            var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
-            if (isMobile || isIOS) {
-                // Ensure tables take full width
-                var tables = document.querySelectorAll('.subject-table, .chronological-table');
-                for (var i = 0; i < tables.length; i++) {
-                    tables[i].style.width = '100%';
-                    tables[i].style.display = 'block';
-                    tables[i].style.tableLayout = 'fixed';
-                }
-                
-                // Make sure calendar view is optimized
-                var calendarContainer = document.getElementById('calendar-container');
-                if (calendarContainer && calendarContainer.style.display === 'block') {
-                    var calendarGrid = document.querySelector('.calendar-grid');
-                    if (calendarGrid) {
-                        calendarGrid.style.width = '100%';
-                    }
-                }
             }
         }
         
@@ -1337,8 +502,8 @@
 
         // Add touch event handling for better mobile experience
         document.addEventListener('DOMContentLoaded', function() {
-            // Detect if device is touch-based and on a small screen
-            const isTouchDevice = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 767;
+            // Detect if device is touch-based
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             
             if (isTouchDevice) {
                 document.body.classList.add('touch-device');
@@ -1391,23 +556,90 @@
                     }, { passive: true });
                 });
                 
-                // Only show iOS install banner on iOS devices with small screens
-                const iosInstallBanner = document.getElementById('ios-install-banner');
-                if (iosInstallBanner && /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && window.innerWidth <= 767) {
-                    // Check if the user hasn't closed it before
-                    if (!localStorage.getItem('iosInstallBannerClosed')) {
-                        iosInstallBanner.style.display = 'block';
-                        
-                        // Handle close button
-                        const closeBtn = iosInstallBanner.querySelector('.ios-close-btn');
-                        if (closeBtn) {
-                            closeBtn.addEventListener('click', function() {
-                                iosInstallBanner.style.display = 'none';
-                                // Remember user preference
-                                localStorage.setItem('iosInstallBannerClosed', 'true');
-                            });
-                        }
+                // Add swipe gesture navigation
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                // Add swipe detector to container
+                const container = document.querySelector('.container');
+                
+                container.addEventListener('touchstart', function(e) {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                
+                container.addEventListener('touchend', function(e) {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, { passive: true });
+                
+                function handleSwipe() {
+                    const swipeThreshold = 100; // Minimum distance for a swipe
+                    const examView = document.getElementById('exam-view');
+                    const examBtn = document.getElementById('exam-btn');
+                    
+                    // Left swipe - no action needed since we only have one tab
+                    if (touchEndX < touchStartX - swipeThreshold && examView.classList.contains('active')) {
+                        // Add visual feedback but no action
+                        showSwipeIndicator('right');
                     }
+                    // Right swipe - no action needed
+                    else if (touchEndX > touchStartX + swipeThreshold && examView.classList.contains('active')) {
+                        // Add visual feedback but no action
+                        showSwipeIndicator('left');
+                    }
+                }
+                
+                // Update swipe indicator text
+                function showSwipeIndicator(direction) {
+                    // Create indicator element if it doesn't exist
+                    let indicator = document.querySelector('.swipe-indicator');
+                    if (!indicator) {
+                        indicator = document.createElement('div');
+                        indicator.className = 'swipe-indicator';
+                        indicator.style.position = 'fixed';
+                        indicator.style.top = '50%';
+                        indicator.style.transform = 'translateY(-50%)';
+                        indicator.style.backgroundColor = 'rgba(52, 152, 219, 0.3)';
+                        indicator.style.color = 'white';
+                        indicator.style.padding = '20px';
+                        indicator.style.borderRadius = '10px';
+                        indicator.style.fontWeight = 'bold';
+                        indicator.style.zIndex = '1000';
+                        indicator.style.transition = 'opacity 0.5s ease';
+                        document.body.appendChild(indicator);
+                    }
+                    
+                    // Set direction specific properties - update text to reflect single tab
+                    indicator.style.left = direction === 'left' ? '10px' : 'auto';
+                    indicator.style.right = direction === 'right' ? '10px' : 'auto';
+                    indicator.innerHTML = 'Exams';
+                    
+                    // Show and then hide indicator
+                    indicator.style.opacity = '1';
+                    setTimeout(() => {
+                        indicator.style.opacity = '0';
+                    }, 800);
+                }
+                
+                // Add swipe hints to the page
+                const navButtons = document.querySelector('.nav-buttons');
+                if (navButtons) {
+                    const swipeHint = document.createElement('div');
+                    swipeHint.className = 'swipe-hint';
+                    swipeHint.textContent = 'Swipe left/right to switch views';
+                    swipeHint.style.textAlign = 'center';
+                    swipeHint.style.fontSize = '12px';
+                    swipeHint.style.color = '#999';
+                    swipeHint.style.padding = '5px 0';
+                    swipeHint.style.marginTop = '10px';
+                    navButtons.parentNode.insertBefore(swipeHint, navButtons.nextSibling);
+
+                    setTimeout(() => {
+                        swipeHint.style.opacity = '0';
+                        setTimeout(() => {
+                            swipeHint.style.display = 'none';
+                        }, 500);
+                    }, 5000);
                 }
             }
         });
@@ -1749,39 +981,11 @@
             if (splashScreen) {
                 splashScreen.classList.add('hide');
                 setTimeout(() => {
-                    splashScreen.style.display = 'none';
                     if (splashScreen.parentNode) {
                         splashScreen.parentNode.removeChild(splashScreen);
                     }
                 }, 500);
             }
-            
-            // Check if we're on iOS and apply fixes
-            if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-                console.log('iOS device detected, applying specific fixes');
-                
-                // Add iOS-specific class to body
-                document.body.classList.add('ios-device');
-                
-                // Fix for iOS 100vh issue
-                const fixIOSHeight = () => {
-                    const vh = window.innerHeight * 0.01;
-                    document.documentElement.style.setProperty('--vh', `${vh}px`);
-                };
-                
-                fixIOSHeight();
-                window.addEventListener('resize', fixIOSHeight);
-                window.addEventListener('orientationchange', fixIOSHeight);
-                
-                // Enable momentum scrolling on containers
-                const scrollContainers = document.querySelectorAll('.exam-table-container, .calendar-container');
-                scrollContainers.forEach(container => {
-                    container.style.webkitOverflowScrolling = 'touch';
-                });
-            }
-
-            // Create view containers if they don't exist
-            createViewContainers();
 
             // Check if the subjects container exists
             const subjectsContainer = document.getElementById('subjects-container');
@@ -1797,45 +1001,6 @@
             // Update all days left
             updateAllDaysLeft();
             console.log('Days left updated');
-            
-            // Run optimization after a short delay to ensure DOM is fully rendered
-            setTimeout(optimizeTablesForMobile, 100);
-            
-            // Initialize the active tab based on the active class
-            const activeBtn = document.querySelector('.view-btn.active');
-            if (activeBtn) {
-                console.log('Setting initial active tab:', activeBtn.dataset.view);
-                
-                // Use a timeout to ensure DOM is ready
-                setTimeout(function() {
-                    activeBtn.click();
-                }, 200);
-            }
-        }
-
-        // Helper function to create view containers
-        function createViewContainers() {
-            const subjectsContainer = document.getElementById('subjects-container');
-            if (!subjectsContainer) return;
-            
-            // Create containers for other views if they don't exist
-            let chronologicalContainer = document.getElementById('chronological-container');
-            if (!chronologicalContainer) {
-                chronologicalContainer = document.createElement('div');
-                chronologicalContainer.id = 'chronological-container';
-                chronologicalContainer.className = 'exam-table-container';
-                chronologicalContainer.style.display = 'none';
-                subjectsContainer.parentNode.appendChild(chronologicalContainer);
-            }
-            
-            let calendarContainer = document.getElementById('calendar-container');
-            if (!calendarContainer) {
-                calendarContainer = document.createElement('div');
-                calendarContainer.id = 'calendar-container';
-                calendarContainer.className = 'calendar-container';
-                calendarContainer.style.display = 'none';
-                subjectsContainer.parentNode.appendChild(calendarContainer);
-            }
         }
 
         // Add the missing showSaveMessage function
@@ -1872,46 +1037,51 @@
         // Fix tab switching functionality between views
         document.addEventListener('DOMContentLoaded', function() {
             // Setup view switching
-            var viewButtons = document.querySelectorAll('.view-btn');
-            var subjectsContainer = document.getElementById('subjects-container');
+            const viewButtons = document.querySelectorAll('.view-btn');
+            const subjectsContainer = document.getElementById('subjects-container');
             
-            // Create containers if they don't exist
-            if (!subjectsContainer) {
-                subjectsContainer = document.createElement('div');
-                subjectsContainer.id = 'subjects-container';
-                subjectsContainer.className = 'exam-table-container';
-                document.querySelector('.container').appendChild(subjectsContainer);
+            // Create the exam view container if it doesn't exist
+            let examView = document.getElementById('exam-view');
+            if (!examView) {
+                examView = document.createElement('div');
+                examView.id = 'exam-view';
+                examView.className = 'active';
+                // Insert it before the subjects container in DOM
+                subjectsContainer.parentNode.insertBefore(examView, subjectsContainer);
+                // Move subjects container into exam view
+                examView.appendChild(subjectsContainer);
             }
             
-            var chronologicalContainer = document.getElementById('chronological-container');
+            // Create containers for other views
+            let chronologicalContainer = document.getElementById('chronological-container');
             if (!chronologicalContainer) {
                 chronologicalContainer = document.createElement('div');
                 chronologicalContainer.id = 'chronological-container';
                 chronologicalContainer.className = 'exam-table-container';
                 chronologicalContainer.style.display = 'none';
-                document.querySelector('.container').appendChild(chronologicalContainer);
+                examView.appendChild(chronologicalContainer);
             }
             
-            var calendarContainer = document.getElementById('calendar-container');
+            let calendarContainer = document.getElementById('calendar-container');
             if (!calendarContainer) {
                 calendarContainer = document.createElement('div');
                 calendarContainer.id = 'calendar-container';
                 calendarContainer.className = 'calendar-container';
                 calendarContainer.style.display = 'none';
-                document.querySelector('.container').appendChild(calendarContainer);
+                examView.appendChild(calendarContainer);
             }
             
             // Set up view button click handlers
-            for (var i = 0; i < viewButtons.length; i++) {
-                viewButtons[i].addEventListener('click', function() {
-                    // Get selected view
-                    var viewType = this.getAttribute('data-view');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log('View button clicked:', this.dataset.view);
                     
                     // Update active button
-                    for (var j = 0; j < viewButtons.length; j++) {
-                        viewButtons[j].classList.remove('active');
-                    }
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
+                    
+                    // Get selected view
+                    const viewType = this.dataset.view;
                     
                     // Hide all containers
                     subjectsContainer.style.display = 'none';
@@ -1919,345 +1089,310 @@
                     calendarContainer.style.display = 'none';
                     
                     // Show selected container
-                    if (viewType === 'subjects') {
-                        subjectsContainer.style.display = 'block';
-                    } else if (viewType === 'chronological') {
-                        chronologicalContainer.style.display = 'block';
-                        renderExamsInOrder();
-                    } else if (viewType === 'calendar') {
-                        calendarContainer.style.display = 'block';
-                        renderCalendarView();
+                    switch(viewType) {
+                        case 'subjects':
+                            subjectsContainer.style.display = 'block';
+                            break;
+                        case 'chronological':
+                            chronologicalContainer.style.display = 'block';
+                            renderExamsInOrder();
+                            break;
+                        case 'calendar':
+                            calendarContainer.style.display = 'block';
+                            renderCalendarView();
+                            break;
                     }
-                    
-                    // Apply mobile optimization after a short delay
-                    setTimeout(function() {
-                        optimizeTablesForMobile();
-                    }, 10);
                 });
-            }
-        });
-        
-        // Legacy switchTab function used by inline handlers for fallback compatibility
-        function switchTab(tabName) {
-            // Find the button with the matching data-view and click it
-            var buttons = document.querySelectorAll('.view-btn');
-            for (var i = 0; i < buttons.length; i++) {
-                if (buttons[i].getAttribute('data-view') === tabName) {
-                    buttons[i].click();
-                    break;
-                }
-            }
-        }
-
-        // Implement calendar view rendering
-        function renderCalendarView() {
-            try {
-                console.log('Rendering calendar view');
-                
-                // Get the calendar container
-                const calendarContainer = document.getElementById('calendar-container');
-                if (!calendarContainer) {
-                    console.error('Calendar container not found');
-                    return;
-                }
-                
-                // Clear previous content
-                calendarContainer.innerHTML = '';
-                
-                // Make sure the container is visible
-                calendarContainer.style.display = 'block';
-                
-                // Detect iOS for special handling
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                
-                // Get current month and year
-                const today = new Date();
-                let currentMonth = today.getMonth();
-                let currentYear = today.getFullYear();
-                
-                // Create calendar header with navigation
-                const calendarHeader = document.createElement('div');
-                calendarHeader.className = 'calendar-header';
-                calendarHeader.style.display = 'flex';
-                calendarHeader.style.justifyContent = 'space-between';
-                calendarHeader.style.alignItems = 'center';
-                calendarHeader.style.marginBottom = '20px';
-                calendarHeader.style.width = '100%';
-                
-                const prevMonthBtn = document.createElement('button');
-                prevMonthBtn.className = 'calendar-nav-btn';
-                prevMonthBtn.innerHTML = '&laquo; Prev';
-                prevMonthBtn.style.padding = '8px 15px';
-                prevMonthBtn.style.backgroundColor = '#3498db';
-                prevMonthBtn.style.color = 'white';
-                prevMonthBtn.style.border = 'none';
-                prevMonthBtn.style.borderRadius = '5px';
-                prevMonthBtn.style.cursor = 'pointer';
-                
-                const monthYearDisplay = document.createElement('h2');
-                monthYearDisplay.className = 'month-year-display';
-                monthYearDisplay.style.margin = '0';
-                monthYearDisplay.style.fontSize = isIOS ? '1.2rem' : '1.5rem';
-                
-                const nextMonthBtn = document.createElement('button');
-                nextMonthBtn.className = 'calendar-nav-btn';
-                nextMonthBtn.innerHTML = 'Next &raquo;';
-                nextMonthBtn.style.padding = '8px 15px';
-                nextMonthBtn.style.backgroundColor = '#3498db';
-                nextMonthBtn.style.color = 'white';
-                nextMonthBtn.style.border = 'none';
-                nextMonthBtn.style.borderRadius = '5px';
-                nextMonthBtn.style.cursor = 'pointer';
-                
-                calendarHeader.appendChild(prevMonthBtn);
-                calendarHeader.appendChild(monthYearDisplay);
-                calendarHeader.appendChild(nextMonthBtn);
-                calendarContainer.appendChild(calendarHeader);
-                
-                // Create calendar grid container
-                const calendarGrid = document.createElement('div');
-                calendarGrid.className = 'calendar-grid';
-                calendarGrid.style.display = 'grid';
-                calendarGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
-                calendarGrid.style.gap = '5px';
-                calendarGrid.style.width = '100%';
-                calendarGrid.style.boxSizing = 'border-box';
-                
-                // Apply special iOS styles if needed
-                if (isIOS) {
-                    calendarContainer.style.width = '100%';
-                    calendarContainer.style.padding = '0';
-                    calendarContainer.style.margin = '0';
-                    calendarContainer.style.boxSizing = 'border-box';
-                    calendarContainer.style.overflow = 'hidden';
-                    
-                    calendarGrid.style.width = '100%';
-                    calendarGrid.style.minWidth = '100%';
-                }
-                
-                calendarContainer.appendChild(calendarGrid);
-                
-                // Function to generate the calendar for a specific month and year
-                function generateCalendar(month, year) {
-                    // Update header display
-                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                                       'July', 'August', 'September', 'October', 'November', 'December'];
-                    monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
-                    
-                    // Clear previous calendar
-                    calendarGrid.innerHTML = '';
-                    
-                    // Add day headers
-                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                    dayNames.forEach(day => {
-                        const dayHeader = document.createElement('div');
-                        dayHeader.className = 'calendar-day-header';
-                        dayHeader.textContent = day;
-                        dayHeader.style.textAlign = 'center';
-                        dayHeader.style.fontWeight = 'bold';
-                        dayHeader.style.padding = isIOS ? '5px 2px' : '10px';
-                        dayHeader.style.backgroundColor = '#3498db';
-                        dayHeader.style.color = 'white';
-                        dayHeader.style.borderRadius = '5px 5px 0 0';
-                        
-                        if (isIOS) {
-                            dayHeader.style.fontSize = '12px';
-                            dayHeader.style.overflow = 'hidden';
-                        }
-                        
-                        calendarGrid.appendChild(dayHeader);
-                    });
-                    
-                    // Get first day of the month and number of days
-                    const firstDay = new Date(year, month, 1).getDay();
-                    const daysInMonth = new Date(year, month + 1, 0).getDate();
-                    
-                    // Add blank cells for days before the 1st of the month
-                    for (let i = 0; i < firstDay; i++) {
-                        const emptyDay = document.createElement('div');
-                        emptyDay.className = 'calendar-day empty';
-                        emptyDay.style.backgroundColor = '#f9f9f9';
-                        
-                        if (isIOS) {
-                            emptyDay.style.minHeight = '40px';
-                            emptyDay.style.borderRadius = '3px';
-                        } else {
-                            emptyDay.style.minHeight = '100px';
-                        }
-                        
-                        calendarGrid.appendChild(emptyDay);
+            });
+            
+            // Implement calendar view rendering
+            function renderCalendarView() {
+                try {
+                    // Get the calendar container
+                    const calendarContainer = document.getElementById('calendar-container');
+                    if (!calendarContainer) {
+                        console.error('Calendar container not found');
+                        return;
                     }
                     
-                    // Collect all exam dates for this month
-                    const monthExams = [];
+                    // Clear previous content
+                    calendarContainer.innerHTML = '';
                     
-                    Object.entries(exams).forEach(([subject, examList]) => {
-                        examList.forEach(exam => {
-                            try {
-                                if (exam.date) {
-                                    const dateStr = exam.date;
-                                    const regex = /([A-Za-z]+)\s+(\d+)(?:st|nd|rd|th)/;
-                                    const match = dateStr.match(regex);
-                                    
-                                    if (match) {
-                                        const monthName = match[1];
-                                        const day = parseInt(match[2], 10);
-                                        const examMonth = new Date(`${monthName} 1, 2000`).getMonth();
+                    // Get current month and year
+                    const today = new Date();
+                    let currentMonth = today.getMonth();
+                    let currentYear = today.getFullYear();
+                    
+                    // Create calendar header with navigation
+                    const calendarHeader = document.createElement('div');
+                    calendarHeader.className = 'calendar-header';
+                    
+                    const prevMonthBtn = document.createElement('button');
+                    prevMonthBtn.className = 'calendar-nav-btn';
+                    prevMonthBtn.innerHTML = '&laquo; Prev';
+                    
+                    const monthYearDisplay = document.createElement('h2');
+                    monthYearDisplay.className = 'month-year-display';
+                    
+                    const nextMonthBtn = document.createElement('button');
+                    nextMonthBtn.className = 'calendar-nav-btn';
+                    nextMonthBtn.innerHTML = 'Next &raquo;';
+                    
+                    calendarHeader.appendChild(prevMonthBtn);
+                    calendarHeader.appendChild(monthYearDisplay);
+                    calendarHeader.appendChild(nextMonthBtn);
+                    
+                    calendarContainer.appendChild(calendarHeader);
+                    
+                    // Create calendar grid container
+                    const calendarGrid = document.createElement('div');
+                    calendarGrid.className = 'calendar-grid';
+                    calendarContainer.appendChild(calendarGrid);
+                    
+                    // Function to generate the calendar for a specific month and year
+                    function generateCalendar(month, year) {
+                        // Update header display
+                        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                           'July', 'August', 'September', 'October', 'November', 'December'];
+                        monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+                        
+                        // Clear previous calendar
+                        calendarGrid.innerHTML = '';
+                        
+                        // Add day headers
+                        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        dayNames.forEach(day => {
+                            const dayHeader = document.createElement('div');
+                            dayHeader.className = 'calendar-day-header';
+                            dayHeader.textContent = day;
+                            calendarGrid.appendChild(dayHeader);
+                        });
+                        
+                        // Get first day of the month and number of days
+                        const firstDay = new Date(year, month, 1).getDay();
+                        const daysInMonth = new Date(year, month + 1, 0).getDate();
+                        
+                        // Add blank cells for days before the 1st of the month
+                        for (let i = 0; i < firstDay; i++) {
+                            const emptyDay = document.createElement('div');
+                            emptyDay.className = 'calendar-day empty';
+                            calendarGrid.appendChild(emptyDay);
+                        }
+                        
+                        // Collect all exam dates for this month
+                        const monthExams = [];
+                        
+                        Object.entries(exams).forEach(([subject, examList]) => {
+                            examList.forEach(exam => {
+                                try {
+                                    if (exam.date) {
+                                        const dateStr = exam.date;
+                                        const regex = /([A-Za-z]+)\s+(\d+)(?:st|nd|rd|th)/;
+                                        const match = dateStr.match(regex);
                                         
-                                        if (examMonth === month) {
-                                            monthExams.push({
-                                                day: day,
-                                                subject: subject,
-                                                name: exam.name,
-                                                dateStr: exam.date
-                                            });
+                                        if (match) {
+                                            const monthName = match[1];
+                                            const day = parseInt(match[2], 10);
+                                            const examMonth = new Date(`${monthName} 1, 2000`).getMonth();
+                                            
+                                            if (examMonth === month) {
+                                                monthExams.push({
+                                                    day: day,
+                                                    subject: subject,
+                                                    name: exam.name,
+                                                    dateStr: exam.date
+                                                });
+                                            }
                                         }
                                     }
+                                } catch (error) {
+                                    console.error('Error processing exam date for calendar:', error);
                                 }
-                            } catch (error) {
-                                console.error('Error processing exam date for calendar:', error);
-                            }
+                            });
                         });
+                        
+                        // Create calendar days
+                        for (let day = 1; day <= daysInMonth; day++) {
+                            const dayCell = document.createElement('div');
+                            dayCell.className = 'calendar-day';
+                            
+                            // Check if this is today
+                            const isToday = (day === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+                            if (isToday) {
+                                dayCell.classList.add('today');
+                            }
+                            
+                            // Add day number
+                            const dayNumber = document.createElement('div');
+                            dayNumber.className = 'day-number';
+                            dayNumber.textContent = day;
+                            dayCell.appendChild(dayNumber);
+                            
+                            // Add exams for this day
+                            const dayExams = monthExams.filter(exam => exam.day === day);
+                            
+                            if (dayExams.length > 0) {
+                                dayCell.classList.add('has-exams');
+                                
+                                const examsList = document.createElement('div');
+                                examsList.className = 'day-exams';
+                                
+                                dayExams.forEach(exam => {
+                                    const examItem = document.createElement('div');
+                                    examItem.className = 'calendar-exam';
+                                    
+                                    // Calculate days left
+                                    const daysLeft = calculateDaysLeft(exam.dateStr);
+                                    
+                                    // Add appropriate class based on urgency
+                                    if (daysLeft < 0) {
+                                        examItem.classList.add('past-exam');
+                                    } else if (daysLeft <= 7) {
+                                        examItem.classList.add('urgent-exam');
+                                    } else if (daysLeft <= 14) {
+                                        examItem.classList.add('soon-exam');
+                                    } else if (daysLeft <= 30) {
+                                        examItem.classList.add('upcoming-exam');
+                                    }
+                                    
+                                    examItem.textContent = `${exam.subject}: ${exam.name}`;
+                                    examItem.title = `${exam.subject}: ${exam.name} (${exam.dateStr})`;
+                                    
+                                    examsList.appendChild(examItem);
+                                });
+                                
+                                dayCell.appendChild(examsList);
+                            }
+                            
+                            calendarGrid.appendChild(dayCell);
+                        }
+                    }
+                    
+                    // Initial calendar generation
+                    generateCalendar(currentMonth, currentYear);
+                    
+                    // Add event listeners for navigation
+                    prevMonthBtn.addEventListener('click', function() {
+                        currentMonth--;
+                        if (currentMonth < 0) {
+                            currentMonth = 11;
+                            currentYear--;
+                        }
+                        generateCalendar(currentMonth, currentYear);
                     });
                     
-                    // Create calendar days
-                    for (let day = 1; day <= daysInMonth; day++) {
-                        const dayCell = document.createElement('div');
-                        dayCell.className = 'calendar-day';
-                        dayCell.style.border = '1px solid #ddd';
-                        dayCell.style.backgroundColor = '#fff';
-                        dayCell.style.borderRadius = '5px';
-                        dayCell.style.overflow = 'hidden';
-                        dayCell.style.boxSizing = 'border-box';
-                        
-                        if (isIOS) {
-                            dayCell.style.minHeight = '50px';
-                            dayCell.style.padding = '2px';
-                        } else {
-                            dayCell.style.minHeight = '100px';
-                            dayCell.style.padding = '5px';
+                    nextMonthBtn.addEventListener('click', function() {
+                        currentMonth++;
+                        if (currentMonth > 11) {
+                            currentMonth = 0;
+                            currentYear++;
                         }
-                        
-                        // Check if this is today
-                        const isToday = (day === today.getDate() && month === today.getMonth() && year === today.getFullYear());
-                        if (isToday) {
-                            dayCell.classList.add('today');
-                            dayCell.style.border = '2px solid #3498db';
-                        }
-                        
-                        // Add day number
-                        const dayNumber = document.createElement('div');
-                        dayNumber.className = 'day-number';
-                        dayNumber.textContent = day;
-                        dayNumber.style.fontWeight = 'bold';
-                        dayNumber.style.marginBottom = isIOS ? '2px' : '5px';
-                        dayCell.appendChild(dayNumber);
-                        
-                        // Add exams for this day
-                        const dayExams = monthExams.filter(exam => exam.day === day);
-                        
-                        if (dayExams.length > 0) {
-                            dayCell.classList.add('has-exams');
-                            dayCell.style.backgroundColor = '#f0f8ff';
-                            
-                            const examsList = document.createElement('div');
-                            examsList.className = 'day-exams';
-                            examsList.style.display = 'flex';
-                            examsList.style.flexDirection = 'column';
-                            examsList.style.gap = '3px';
-                            
-                            dayExams.forEach(exam => {
-                                const examItem = document.createElement('div');
-                                examItem.className = 'calendar-exam';
-                                examItem.style.fontSize = isIOS ? '0.6rem' : '0.8rem';
-                                examItem.style.padding = isIOS ? '1px 3px' : '2px 5px';
-                                examItem.style.borderRadius = '3px';
-                                examItem.style.backgroundColor = '#e0f7fa';
-                                examItem.style.whiteSpace = 'nowrap';
-                                examItem.style.overflow = 'hidden';
-                                examItem.style.textOverflow = 'ellipsis';
-                                
-                                // Calculate days left
-                                const daysLeft = calculateDaysLeft(exam.dateStr);
-                                
-                                // Add appropriate class based on urgency
-                                if (daysLeft < 0) {
-                                    examItem.classList.add('past-exam');
-                                    examItem.style.backgroundColor = '#e0e0e0';
-                                    examItem.style.textDecoration = 'line-through';
-                                } else if (daysLeft <= 7) {
-                                    examItem.classList.add('urgent-exam');
-                                    examItem.style.backgroundColor = '#ffcdd2';
-                                } else if (daysLeft <= 14) {
-                                    examItem.classList.add('soon-exam');
-                                    examItem.style.backgroundColor = '#fff9c4';
-                                } else if (daysLeft <= 30) {
-                                    examItem.classList.add('upcoming-exam');
-                                    examItem.style.backgroundColor = '#c8e6c9';
-                                }
-                                
-                                examItem.textContent = `${exam.subject}: ${exam.name}`;
-                                examItem.title = `${exam.subject}: ${exam.name} (${exam.dateStr})`;
-                                
-                                examsList.appendChild(examItem);
-                            });
-                            
-                            dayCell.appendChild(examsList);
-                        }
-                        
-                        calendarGrid.appendChild(dayCell);
-                    }
+                        generateCalendar(currentMonth, currentYear);
+                    });
                     
-                    // Force calendar display after rendering
-                    if (isIOS) {
-                        setTimeout(() => {
-                            // Ensure the calendar container and grid are properly sized
-                            calendarContainer.style.width = '100%';
-                            calendarContainer.style.padding = '0';
-                            calendarContainer.style.boxSizing = 'border-box';
-                            
-                            calendarGrid.style.width = '100%';
-                            calendarGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
-                            
-                            // Adjust day cells to fit properly
-                            const allDayCells = calendarGrid.querySelectorAll('.calendar-day, .calendar-day-header');
-                            allDayCells.forEach(cell => {
-                                cell.style.boxSizing = 'border-box';
-                                cell.style.width = '100%';
-                            });
-                        }, 0);
+                    // Add some calendar styles
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .calendar-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 20px;
+                        }
+                        .calendar-nav-btn {
+                            padding: 8px 15px;
+                            background-color: var(--primary-color);
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        .month-year-display {
+                            margin: 0;
+                            font-size: 1.5rem;
+                        }
+                        .calendar-grid {
+                            display: grid;
+                            grid-template-columns: repeat(7, 1fr);
+                            gap: 5px;
+                        }
+                        .calendar-day-header {
+                            text-align: center;
+                            font-weight: bold;
+                            padding: 10px;
+                            background-color: var(--primary-color);
+                            color: white;
+                            border-radius: 5px 5px 0 0;
+                        }
+                        .calendar-day {
+                            min-height: 100px;
+                            border: 1px solid #ddd;
+                            padding: 5px;
+                            background-color: var(--card-bg);
+                            border-radius: 5px;
+                            overflow: hidden;
+                        }
+                        .calendar-day.empty {
+                            background-color: #f9f9f9;
+                        }
+                        .calendar-day.today {
+                            border: 2px solid var(--primary-color);
+                        }
+                        .calendar-day.has-exams {
+                            background-color: var(--highlight-bg);
+                        }
+                        .day-number {
+                            font-weight: bold;
+                            margin-bottom: 5px;
+                        }
+                        .day-exams {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 3px;
+                        }
+                        .calendar-exam {
+                            font-size: 0.8rem;
+                            padding: 2px 5px;
+                            border-radius: 3px;
+                            background-color: #e0f7fa;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                        .calendar-exam.urgent-exam {
+                            background-color: #ffcdd2;
+                        }
+                        .calendar-exam.soon-exam {
+                            background-color: #fff9c4;
+                        }
+                        .calendar-exam.upcoming-exam {
+                            background-color: #c8e6c9;
+                        }
+                        .calendar-exam.past-exam {
+                            background-color: #e0e0e0;
+                            text-decoration: line-through;
+                        }
+                        
+                        @media (max-width: 768px) {
+                            .calendar-day {
+                                min-height: 60px;
+                            }
+                            .calendar-exam {
+                                font-size: 0.7rem;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                } catch (error) {
+                    console.error('Error rendering calendar view:', error);
+                    const calendarContainer = document.getElementById('calendar-container');
+                    if (calendarContainer) {
+                        calendarContainer.innerHTML = '<div class="error-message">Error rendering calendar view. Please try refreshing the page.</div>';
                     }
-                }
-                
-                // Initial calendar generation
-                generateCalendar(currentMonth, currentYear);
-                
-                // Add event listeners for navigation
-                prevMonthBtn.addEventListener('click', function() {
-                    currentMonth--;
-                    if (currentMonth < 0) {
-                        currentMonth = 11;
-                        currentYear--;
-                    }
-                    generateCalendar(currentMonth, currentYear);
-                });
-                
-                nextMonthBtn.addEventListener('click', function() {
-                    currentMonth++;
-                    if (currentMonth > 11) {
-                        currentMonth = 0;
-                        currentYear++;
-                    }
-                    generateCalendar(currentMonth, currentYear);
-                });
-            } catch (error) {
-                console.error('Error rendering calendar view:', error);
-                const calendarContainer = document.getElementById('calendar-container');
-                if (calendarContainer) {
-                    calendarContainer.innerHTML = '<div class="error-message" style="color: red; padding: 15px; text-align: center;">Error rendering calendar view. Please try refreshing the page.</div>';
                 }
             }
-        }
+        });
     </script>
 </body>
 </html>
