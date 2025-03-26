@@ -174,10 +174,10 @@
             }
         }
 
-        // Initialize exams
-        exams = loadExams();
-
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize exams after DOM is loaded
+            exams = loadExams();
+            
             // Initialize only once with a flag
             if (!window.appInitialized) {
                 window.appInitialized = true;
