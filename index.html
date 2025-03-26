@@ -76,7 +76,7 @@
             <!-- Subject tables will be generated here -->
         </div>
 
-        <!-- Remove export button from controls section -->
+        <!-- Controls section without reset button -->
         <div class="controls">
             <button class="action-btn" id="refresh-dates">
                 <span class="refresh-icon">↻</span> Refresh Days
@@ -143,40 +143,20 @@
             ]
         };
         
-        // Load the saved exams or use default
+        // Load the exams - always use the default exams data
         function loadExams() {
-            try {
-                const savedExams = localStorage.getItem('exams');
-                if (savedExams) {
-                    const parsedExams = JSON.parse(savedExams);
-                    // Check if the saved exams have the same structure as defaultExams
-                    if (Object.keys(parsedExams).every(subject => 
-                        defaultExams.hasOwnProperty(subject) && 
-                        Array.isArray(parsedExams[subject])
-                    )) {
-                        return parsedExams;
-                    }
-                }
-                // Always return the most recent defaultExams from the HTML file
-                return defaultExams;
-            } catch (e) {
-                console.error('Error loading saved exams:', e);
-                return defaultExams;
-            }
+            return defaultExams;
         }
         
-        // Function to save exams to localStorage
+        // Function to save exams - no-op since we don't want to save changes
         function saveExams(examsData) {
-            try {
-                localStorage.setItem('exams', JSON.stringify(examsData));
-            } catch (e) {
-                console.error('Error saving exams:', e);
-            }
+            // No-op - intentionally not saving to localStorage
+            console.log('Exams data changes not saved (fixed data mode)');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize exams after DOM is loaded
-            exams = loadExams();
+            // Always initialize exams from defaultExams
+            exams = defaultExams;
             
             // Initialize only once with a flag
             if (!window.appInitialized) {
@@ -190,11 +170,8 @@
         // Function to render exams in chronological order
         function renderExamsInOrder() {
             try {
-                // If exams is undefined or empty, use the default exams
-                if (!exams || Object.keys(exams).length === 0) {
-                    exams = defaultExams;
-                    saveExams(exams);
-                }
+                // Always use the default exams
+                exams = defaultExams;
                 
                 const examsArray = [];
                 
@@ -353,11 +330,8 @@
         // Function to render subjects
         function renderSubjects() {
             try {
-                // If exams is undefined or empty, use the default exams
-                if (!exams || Object.keys(exams).length === 0) {
-                    exams = defaultExams;
-                    saveExams(exams);
-                }
+                // Always use the default exams
+                exams = defaultExams;
                 
                 const container = document.getElementById('subjects-container');
                 if (!container) {
