@@ -148,10 +148,17 @@
             try {
                 const savedExams = localStorage.getItem('exams');
                 if (savedExams) {
-                    return JSON.parse(savedExams);
-                } else {
-                    return defaultExams;
+                    const parsedExams = JSON.parse(savedExams);
+                    // Check if the saved exams have the same structure as defaultExams
+                    if (Object.keys(parsedExams).every(subject => 
+                        defaultExams.hasOwnProperty(subject) && 
+                        Array.isArray(parsedExams[subject])
+                    )) {
+                        return parsedExams;
+                    }
                 }
+                // Always return the most recent defaultExams from the HTML file
+                return defaultExams;
             } catch (e) {
                 console.error('Error loading saved exams:', e);
                 return defaultExams;
